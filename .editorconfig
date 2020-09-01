@@ -1,0 +1,19 @@
+root = true
+
+[*]
+# 文档编码格式
+charset = utf-8
+# 换行符的使用形式（主要是解决window 和 mac或unix 的不同）
+end_of_line = lf
+# 缩进的大小
+indent_size = 2
+# 缩进的方式
+indent_style = space
+# 文档是否需要以换行结尾（/n）
+insert_final_newline = true
+# 文件结尾是否允许空格
+trim_trailing_whitespace = true
+
+# 对后缀名为 md 的文件生效
+[*.md]
+trim_trailing_whitespace = false
