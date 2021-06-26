@@ -23,6 +23,7 @@
   function isVue(obj) {
     if (typeof obj !== "function") return false;
     const prototype = obj.prototype;
+    if (!prototype) return false;
     const signs = [
       "_init",
       "$set",
