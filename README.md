@@ -8,3 +8,7 @@ Easy to debug online vue code.
 
 [Chrome](https://chrome.google.com/webstore/detail/oohfffedbkbjnbpbbedapppafmlnccmb/reviews)
 
+## screenshot
+
+![](./docs/screenshot.png)
+
