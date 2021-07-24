@@ -19,7 +19,7 @@
     // console.log(config);
   }
 
-  // 没什么好的方法，能用就行
+  // There's no good way. Just use it
   function isVue(obj) {
     if (typeof obj !== "function") return false;
     const prototype = obj.prototype;
