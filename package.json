@@ -1,14 +1,14 @@
 {
-  "name": "vue-force-dev",
-  "version": "0.1.0",
-  "description": "A tool forces vue to run in development",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node scripts/build-zip.js"
   },
   "keywords": [],
   "author": "LoryHuang",
   "license": "MIT",
-  "dependencies": {
-    "@types/chrome": "0.0.107"
+  "devDependencies": {
+    "@types/chrome": "^0.0.145",
+    "archiver": "^5.3.0",
+    "fs-extra": "^10.0.0"
   }
 }
