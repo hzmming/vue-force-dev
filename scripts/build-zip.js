@@ -20,7 +20,7 @@ function main() {
   const { name, version } = require("../manifest.json");
   const zipFilename = `${hyphenate(name)}-v${version}.zip`;
 
-  fs.emptyDir(DEST_ZIP_DIR);
+  fs.emptyDirSync(DEST_ZIP_DIR);
 
   console.info(`Building ${zipFilename}...`);
   const archive = archiver("zip", { zlib: { level: 9 } });
