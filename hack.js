@@ -1,12 +1,12 @@
-(function() {
+(function () {
   "use strict";
   const defineProperty = Object.defineProperty;
-  Object.defineProperty = function(...args) {
+  Object.defineProperty = function (...args) {
     // [native code]
-    try{
+    try {
       hack(...args);
-    }catch(e) {
-      console.error('vue-force-dev', e);
+    } catch (e) {
+      console.error("vue-force-dev", e);
     }
     return defineProperty(...args);
   };
@@ -39,9 +39,9 @@
       "$emit",
       "_update",
       "$forceUpdate",
-      "$destroy"
+      "$destroy",
     ];
     const objKeys = Object.keys(prototype);
-    return signs.every(i => objKeys.includes(i));
+    return signs.every((i) => objKeys.includes(i));
   }
 })();
