@@ -18,39 +18,21 @@
     "128": "icons/128.png"
   },
   "background": {
-    "scripts": [
-      "background.js"
-    ],
+    "scripts": ["background.js"],
     "persistent": false
   },
-  "permissions": [
-    "http://*/*",
-    "https://*/*",
-    "file:///*",
-    "contextMenus",
-    "storage"
-  ],
+  "permissions": ["http://*/*", "https://*/*", "file:///*"],
   "content_scripts": [
     {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "inject.js"
-      ],
+      "matches": ["<all_urls>"],
+      "js": ["inject.js"],
       "run_at": "document_start"
     },
     {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "detector.js"
-      ],
+      "matches": ["<all_urls>"],
+      "js": ["detector.js"],
       "run_at": "document_idle"
     }
   ],
-  "web_accessible_resources": [
-    "hack.js"
-  ]
+  "web_accessible_resources": ["hack.js"]
 }
