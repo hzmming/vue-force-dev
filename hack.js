@@ -3,7 +3,11 @@
   const defineProperty = Object.defineProperty;
   Object.defineProperty = function(...args) {
     // [native code]
-    hack(...args);
+    try{
+      hack(...args);
+    }catch(e) {
+      console.error('vue-force-dev', e);
+    }
     return defineProperty(...args);
   };
 
