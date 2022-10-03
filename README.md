@@ -12,5 +12,6 @@ Easy to debug online vue code.
 
 ## screenshot
 
-![](./docs/screenshot.png)
+![](./docs/screenshot-vue3.png)
 
+![](./docs/screenshot-vue2.png)

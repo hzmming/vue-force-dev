@@ -7,8 +7,9 @@
   "author": "LoryHuang",
   "license": "MIT",
   "devDependencies": {
-    "@types/chrome": "^0.0.145",
+    "@types/chrome": "^0.0.197",
     "archiver": "^5.3.0",
+    "eslint": "^8.24.0",
     "fs-extra": "^10.0.0"
   }
 }

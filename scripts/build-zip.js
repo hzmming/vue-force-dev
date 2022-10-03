@@ -31,8 +31,6 @@ function main() {
     .directory("popups")
     .file("background.js")
     .file("detector.js")
-    .file("hack.js")
-    .file("inject.js")
     .file("manifest.json")
     .pipe(stream);
 
