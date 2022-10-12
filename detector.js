@@ -11,6 +11,11 @@
 
   // Receive the message of vue devtools, crack and replay it.
   function listenVueDevtoolsMessage() {
+    const LOG_MARK = [
+      "%c vue-force-dev ",
+      `padding: 1px; border-radius: 0 3px 3px 0; color: #fff; background: #42b883`,
+    ];
+
     const messageHander = (e) => {
       try {
         if (!window.__VUE_DEVTOOLS_GLOBAL_HOOK__) return;
@@ -30,7 +35,11 @@
           window.postMessage(data, "*");
         }
       } catch (e) {
-        console.error("vue-force-dev", e);
+        console.error(
+          ...LOG_MARK,
+          e,
+          "\n\nreport issues: https://github.com/hzmming/vue-force-dev/issues"
+        );
         window.removeEventListener("message", messageHander);
       }
     };
