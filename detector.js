@@ -23,7 +23,8 @@
           }
 
           // force devtools enabled
-          crack(data);
+          const result = crack(data);
+          if (!result) return;
 
           // replay
           window.postMessage(data, "*");
@@ -36,7 +37,7 @@
     window.addEventListener("message", messageHander);
 
     function crack(data) {
-      data.devtoolsEnabled = true;
+      let result;
 
       // Nuxt.js
       if (data.nuxtDetected) {
@@ -48,45 +49,48 @@
 
         // Vue 2
         if (Vue) {
-          crackVue2(Vue);
+          result = crackVue2(Vue);
         } else {
           // Vue 3.2.14+
-          crackVue3();
+          result = crackVue3();
         }
-
-        return;
       }
-
       // Vue 3
-      const vueDetected = !!window.__VUE__;
-      if (vueDetected) {
-        crackVue3();
-        return;
+      else if (window.__VUE__) {
+        result = crackVue3();
+      }
+      // Vue 2
+      else {
+        result = crackVue2();
       }
 
-      // Vue 2
-      crackVue2();
+      if (result) data.devtoolsEnabled = true;
+
+      return result;
     }
 
     function crackVue2(Vue) {
-      const devtools = window.__VUE_DEVTOOLS_GLOBAL_HOOK__;
-
       if (!Vue) {
         const app = getVueRootInstance(2);
+        if (!app) return false; // Vue may not be finished yet
         Vue = Object.getPrototypeOf(app).constructor;
         while (Vue.super) {
           Vue = Vue.super;
         }
       }
 
+      const devtools = window.__VUE_DEVTOOLS_GLOBAL_HOOK__;
       Vue.config.devtools = true;
       devtools.emit("init", Vue);
+
+      return true;
     }
 
     function crackVue3() {
+      const app = getVueRootInstance(3);
+      if (!app) return false; // Vue may not be finished yet
       const devtools = window.__VUE_DEVTOOLS_GLOBAL_HOOK__;
       devtools.enabled = true;
-      const app = getVueRootInstance(3);
       const version = app.version;
       devtools.emit("app:init" /* APP_INIT */, app, version, {
         // TODO I can't get the right value.
@@ -99,6 +103,8 @@
 
       // TODO How to trigger the devtools refresh when vue instance changed.
       // Maybe `devtools.emit("flush")` can be used, but i don't know when, where and how to use it.
+
+      return true;
     }
 
     function getVueRootInstance(version) {
