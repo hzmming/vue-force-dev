@@ -1,7 +1,7 @@
 {
   "name": "Vue force dev",
   "description": "A tool forces vue to run in development",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "manifest_version": 2,
   "browser_action": {
     "default_popup": "popups/not-found.html",
