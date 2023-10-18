@@ -16,23 +16,18 @@
       `padding: 1px; border-radius: 0 3px 3px 0; color: #fff; background: #42b883`,
     ];
 
-    const messageHander = (e) => {
+    const messageHandler = (e) => {
       try {
         if (!window.__VUE_DEVTOOLS_GLOBAL_HOOK__) return;
         if (e.source === window && e.data.vueDetected) {
           const data = e.data;
           // skip
           if (data.devtoolsEnabled) {
-            window.removeEventListener("message", messageHander);
+            window.removeEventListener("message", messageHandler);
             return;
           }
 
-          // force devtools enabled
-          const result = crack(data);
-          if (!result) return;
-
-          // replay
-          window.postMessage(data, "*");
+          detect(data);
         }
       } catch (e) {
         console.error(
@@ -40,10 +35,36 @@
           e,
           "\n\nreport issues: https://github.com/hzmming/vue-force-dev/issues"
         );
-        window.removeEventListener("message", messageHander);
+        window.removeEventListener("message", messageHandler);
       }
     };
-    window.addEventListener("message", messageHander);
+    window.addEventListener("message", messageHandler);
+
+    function detect(data) {
+      let delay = 1000
+      let detectRemainingTries = 10
+
+      function executeDetection() {
+        // force devtools to be enabled
+        if (crack(data)) {
+          // replay
+          window.postMessage(data, "*");
+          return
+        }
+
+        if (detectRemainingTries > 0) {
+          detectRemainingTries--
+          setTimeout(() => {
+            executeDetection()
+          }, delay)
+          delay *= 5
+        }
+      }
+
+      setTimeout(() => {
+        executeDetection()
+      }, 100)
+    }
 
     function crack(data) {
       let result;
