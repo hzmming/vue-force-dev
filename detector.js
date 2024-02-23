@@ -19,15 +19,20 @@
     const messageHandler = (e) => {
       try {
         if (!window.__VUE_DEVTOOLS_GLOBAL_HOOK__) return;
-        if (e.source === window && e.data.vueDetected) {
+        if (e.source === window) {
           const data = e.data;
-          // skip
-          if (data.devtoolsEnabled) {
-            window.removeEventListener("message", messageHandler);
-            return;
-          }
+          const window = e.source;
+          const hasVueDetected = window.$nuxt || window.__VUE__ || data.vueDetected;
 
-          detect(data);
+          if (hasVueDetected) {
+            // skip
+            if (data.devtoolsEnabled) {
+              window.removeEventListener("message", messageHandler);
+              return;
+            }
+
+            detect(data);
+          }
         }
       } catch (e) {
         console.error(
