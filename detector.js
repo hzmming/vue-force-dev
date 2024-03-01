@@ -2,10 +2,14 @@
   const isBrowser = typeof navigator !== "undefined";
   const isFirefox = isBrowser && navigator.userAgent.indexOf("Firefox") > -1;
 
+  const unpackVueDevtoolsMessage = (data) =>
+    data.key === "_vue-devtools-send-message" ? data.message : data;
+
   // Light up my extension icon
   window.addEventListener("message", (e) => {
-    if (e.source === window && e.data.vueDetected) {
-      chrome.runtime.sendMessage(e.data);
+    const data = unpackVueDevtoolsMessage(e.data);
+    if (e.source === window && data.vueDetected) {
+      chrome.runtime.sendMessage(data);
     }
   });
 
@@ -16,18 +20,21 @@
       `padding: 1px; border-radius: 0 3px 3px 0; color: #fff; background: #42b883`,
     ];
 
+    const unpackVueDevtoolsMessage = (data) =>
+      data.key === "_vue-devtools-send-message" ? data.message : data;
+
     const messageHandler = (e) => {
       try {
         if (!window.__VUE_DEVTOOLS_GLOBAL_HOOK__) return;
-        if (e.source === window && e.data.vueDetected) {
-          const data = e.data;
+        const data = unpackVueDevtoolsMessage(e.data);
+        if (e.source === window && data.vueDetected) {
           // skip
           if (data.devtoolsEnabled) {
             window.removeEventListener("message", messageHandler);
             return;
           }
 
-          detect(data);
+          detect(e);
         }
       } catch (e) {
         console.error(
@@ -40,7 +47,8 @@
     };
     window.addEventListener("message", messageHandler);
 
-    function detect(data) {
+    function detect(e) {
+      const data = unpackVueDevtoolsMessage(e.data);
       let delay = 1000
       let detectRemainingTries = 10
 
@@ -48,7 +56,7 @@
         // force devtools to be enabled
         if (crack(data)) {
           // replay
-          window.postMessage(data, "*");
+          window.postMessage(e.data, "*");
           return
         }
 
