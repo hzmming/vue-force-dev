@@ -20,6 +20,14 @@
       `padding: 1px; border-radius: 0 3px 3px 0; color: #fff; background: #42b883`,
     ];
 
+    const error = (...params) => {
+      console.error(
+        ...LOG_MARK,
+        ...params,
+        "\n\nreport issues: https://github.com/hzmming/vue-force-dev/issues"
+      );
+    };
+
     const unpackVueDevtoolsMessage = (data) =>
       data.key === "_vue-devtools-send-message" ? data.message : data;
 
@@ -37,11 +45,7 @@
           detect(e);
         }
       } catch (e) {
-        console.error(
-          ...LOG_MARK,
-          e,
-          "\n\nreport issues: https://github.com/hzmming/vue-force-dev/issues"
-        );
+        error(e);
         window.removeEventListener("message", messageHandler);
       }
     };
