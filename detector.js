@@ -134,6 +134,7 @@
       const devtools = window.__VUE_DEVTOOLS_GLOBAL_HOOK__;
       devtools.enabled = true;
       const version = app.version;
+      app._instance = app._container._vnode.component;
       devtools.emit("app:init" /* APP_INIT */, app, version, {
         Fragment: Symbol.for("v-fgt"),
         Text: Symbol.for("v-txt"),
@@ -141,8 +142,11 @@
         Static: Symbol.for("v-stc"),
       });
 
-      // TODO How to trigger the devtools refresh when vue instance changed.
-      // Maybe `devtools.emit("flush")` can be used, but i don't know when, where and how to use it.
+      try {
+        mixinDevtoolsHooks(app);
+      } catch (e) {
+        error("Fix event communication between components and devtools \n", e);
+      }
 
       return true;
     }
@@ -155,6 +159,84 @@
           return all[i][signProperty];
         }
       }
+    }
+
+    function mixinDevtoolsHooks(app) {
+      // packages/runtime-core/src/devtools.ts
+      const DevtoolsHooks = {
+        COMPONENT_UPDATED: "component:updated",
+        COMPONENT_ADDED: "component:added",
+        COMPONENT_REMOVED: "component:removed",
+      };
+
+      // packages/shared/src/shapeFlags.ts
+      const ShapeFlags = {
+        COMPONENT_SHOULD_KEEP_ALIVE: 1 << 8,
+      };
+
+      const componentShouldKeepAlive = (instance) =>
+        instance.vnode.shapeFlag & ShapeFlags.COMPONENT_SHOULD_KEEP_ALIVE;
+
+      function createDevtoolsComponentHook(hook) {
+        return (component) => {
+          const devtools = window.__VUE_DEVTOOLS_GLOBAL_HOOK__;
+          devtools.emit(
+            hook,
+            component.appContext.app,
+            component.uid,
+            component.parent ? component.parent.uid : undefined,
+            component
+          );
+        };
+      }
+
+      const devtoolsComponentAdded = createDevtoolsComponentHook(
+        DevtoolsHooks.COMPONENT_ADDED
+      );
+
+      const devtoolsComponentUpdated = createDevtoolsComponentHook(
+        DevtoolsHooks.COMPONENT_UPDATED
+      );
+
+      const devtoolsComponentRemoved = createDevtoolsComponentHook(
+        DevtoolsHooks.COMPONENT_REMOVED
+      );
+
+      app.mixin({
+        mounted() {
+          try {
+            // TODO Unable to obtain the setupState value, therefore unable to assign the value to devtoolsRawSetupState
+            // this.$.devtoolsRawSetupState = { ...this.$.setupState };
+
+            if (componentShouldKeepAlive(this.$)) return;
+
+            devtoolsComponentAdded(this.$);
+          } catch (e) {
+            error(e);
+          }
+        },
+        activated() {
+          try {
+            devtoolsComponentAdded(this.$);
+          } catch (e) {
+            error(e);
+          }
+        },
+        updated() {
+          try {
+            devtoolsComponentUpdated(this.$);
+          } catch (e) {
+            error(e);
+          }
+        },
+        unmounted() {
+          try {
+            devtoolsComponentRemoved(this.$);
+          } catch (e) {
+            error(e);
+          }
+        },
+      });
     }
   }
 
