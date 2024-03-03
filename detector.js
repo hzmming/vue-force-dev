@@ -49,29 +49,29 @@
 
     function detect(e) {
       const data = unpackVueDevtoolsMessage(e.data);
-      let delay = 1000
-      let detectRemainingTries = 10
+      let delay = 1000;
+      let detectRemainingTries = 10;
 
       function executeDetection() {
         // force devtools to be enabled
         if (crack(data)) {
           // replay
           window.postMessage(e.data, "*");
-          return
+          return;
         }
 
         if (detectRemainingTries > 0) {
-          detectRemainingTries--
+          detectRemainingTries--;
           setTimeout(() => {
-            executeDetection()
-          }, delay)
-          delay *= 5
+            executeDetection();
+          }, delay);
+          delay *= 5;
         }
       }
 
       setTimeout(() => {
-        executeDetection()
-      }, 100)
+        executeDetection();
+      }, 100);
     }
 
     function crack(data) {
