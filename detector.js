@@ -131,12 +131,10 @@
       devtools.enabled = true;
       const version = app.version;
       devtools.emit("app:init" /* APP_INIT */, app, version, {
-        // TODO I can't get the right value.
-        // Now only one use has found. (packages/app-backend-vue3/src/components/util.ts - isFragment)
-        // Fragment,
-        // Text,
-        // Comment,
-        // Static,
+        Fragment: Symbol.for("v-fgt"),
+        Text: Symbol.for("v-txt"),
+        Comment: Symbol.for("v-cmt"),
+        Static: Symbol.for("v-stc"),
       });
 
       // TODO How to trigger the devtools refresh when vue instance changed.
