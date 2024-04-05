@@ -1,0 +1,3 @@
+# Ignore artifacts:
+*.md
+src/plugins/vendors/pinia.js
