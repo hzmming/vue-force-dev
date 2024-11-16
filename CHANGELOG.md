@@ -1,3 +1,9 @@
+## 2.1.0 (2024-11-17)
+
+- feat: support Vue.js devtools 7.6.4
+
+
+
 ## 2.0.0 (2024-04-05)
 
 - feat: migrate to manifest v3 and support Pinia
