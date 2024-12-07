@@ -1,6 +1,6 @@
 {
   "private": true,
-  "version": "2.1.0",
+  "version": "2.1.1",
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c",
