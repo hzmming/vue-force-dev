@@ -1,3 +1,9 @@
+## 2.1.1 (2024-12-08)
+
+- fix: remove redundant and incomplete judgments
+
+
+
 ## 2.1.0 (2024-11-17)
 
 - feat: support Vue.js devtools 7.6.4
