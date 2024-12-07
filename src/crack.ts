@@ -5,24 +5,7 @@ import type { VueDevtoolsMessageDetail } from './types/message';
 export function crack(data: VueDevtoolsMessageDetail) {
   let result;
 
-  // Nuxt.js
-  if (data.nuxtDetected) {
-    let Vue;
-
-    if (window.$nuxt) {
-      Vue = window.$nuxt.$root && window.$nuxt.$root.constructor;
-    }
-
-    // Vue 2
-    if (Vue) {
-      result = crackVue2(Vue);
-    } else {
-      // Vue 3.2.14+
-      result = crackVue3();
-    }
-  }
-  // Vue 3
-  else if (window.__VUE__) {
+  if (window.__VUE__) {
     result = crackVue3();
   }
   // Vue 2
